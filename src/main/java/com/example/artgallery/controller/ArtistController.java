@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 public class ArtistController {
     @Autowired
-    private ArtistJpaService ArtistJpaService;
+    private ArtistJpaService artistJpaService;
 
     @GetMapping("/galleries/artists")
     public ArrayList<Artist> getArtists() {
