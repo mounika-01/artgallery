@@ -1,11 +1,12 @@
-package com.example.artgallery.repository;
-
 import com.example.artgallery.model.Artist;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public interface ArtistJpaRepository extends JpaRepository<Artist, Integer> {
+public interface ArtJpaRepository extends JpaRepository<Art, Integer> {
+    List<Art> findByArtist(Artist artist);
 }
