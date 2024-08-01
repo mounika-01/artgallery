@@ -85,10 +85,11 @@ public class ArtJpaService implements ArtRepository {
 
     @Override
     public Artist getArtArtist(int artId) {
-        try{
+        try {
             Art art = artJpaRepository.findById(artId).get();
             return art.getArtist();
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
+}
