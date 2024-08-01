@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class GalleryJpaService implements GalleryRepository {
@@ -32,7 +30,7 @@ public class GalleryJpaService implements GalleryRepository {
             Gallery gallery = galleryJpaRepository.findById(galleryId).get();
             return gallery;
         } catch (Exception e) {
-            throw new ResponsestatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -41,24 +39,21 @@ public class GalleryJpaService implements GalleryRepository {
         for (Artist artist : gallery.getArtists()) {
             artistIds.add(artist.getArtistId());
         }
-        Gallery savedGallery = galleryJpaRepository.save(gallery); 
-        artistJpaRepository.saveAll(artists);
+        Gallery savedGallery = galleryJpaRepository.save(gallery);
+        artistJpaRepository.saveAll(gallery.getArtists());
         return savedGallery;
     }
-    
-    public Gallery updateGallery(int galleryId, Gallery gallery) (
-        
+
+    public Gallery updateGallery(int galleryId, Gallery gallery) {
         try {
-            
             Gallery newGallery = galleryJpaRepository.findById(galleryId).get();
             if (gallery.getGalleryName() != null) {
-                newGallery.setGalleryName (gallery.getGalleryName());
-
+                newGallery.setGalleryName(gallery.getGalleryName());
             }
             if (gallery.getLocation() != null) {
                 newGallery.setLocation(gallery.getLocation());
             }
-            if (gallery.getArtists( ) != null) {
+            if (gallery.getArtists() != null) {
                 List<Artist> artists = newGallery.getArtists();
                 for (Artist artist : artists) {
                     artist.getGalleries().remove(newGallery);
@@ -68,25 +63,23 @@ public class GalleryJpaService implements GalleryRepository {
                 for (Artist artist : gallery.getArtists()) {
                     newArtistIds.add(artist.getArtistId());
                 }
-                List<Artist> newArtists  = artistJpaRepository.findAllById(newArtistIds);
-                for (Artist artist: newArtists) {
+                List<Artist> newArtists = artistJpaRepository.findAllById(newArtistIds);
+                for (Artist artist : newArtists) {
                     artist.getGalleries().add(newGallery);
                 }
-                
-                artistJpaRepository.saveAll(newArtists); 
+                artistJpaRepository.saveAll(newArtists);
                 newGallery.setArtists(newArtists);
             }
             return galleryJpaRepository.save(newGallery);
         } catch (Exception e) {
-            
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
-    
+
     public void deleteGallery(int galleryId) {
         try {
             Gallery gallery = galleryJpaRepository.findById(galleryId).get();
-            List<Artist>artists =  gallery.getArtists();
+            List<Artist> artists = gallery.getArtists();
             for (Artist artist : artists) {
                 artist.getGalleries().remove(gallery);
             }
@@ -95,16 +88,17 @@ public class GalleryJpaService implements GalleryRepository {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        throw new ResponseStatusException (HttpStatus.NO_CONTENT);
+        throw new ResponseStatusException(HttpStatus.NO_CONTENT);
     }
-    
+
     public List<Artist> getGalleryArtists(int galleryId) {
         try {
-            Gallery gallery =  galleryJpaRepository.findById(galleryId).get();
+            Gallery gallery = galleryJpaRepository.findById(galleryId).get();
             return gallery.getArtists();
         } catch (Exception e) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
-}
 
+    // Add this closing brace
+}
