@@ -1,25 +1,23 @@
-package com.example.artgallery.repository;
-
 import com.example.artgallery.model.Artist;
 
-import com.example.artgallery.model.Art;
+import com.example.artgallery.model.Gallery;
 
 import java.util.ArrayList;
 
 import java.util.List;
 
-public interface ArtRepository {
-    ArrayList<Art getArtS();
+public interface ArtistRepository {
+    ArrayList<Artist> getArtists();
 
-    Art getArtById(int artId);
+    Artist getArtistById(int artistId);
 
-    Art addArt(Art art);
+    Artist addArtist(Artist artist);
 
-    Art art-com.example.artgallery.repository.ArtRepository.updateArt(int,Art);
+    Artist updateArtist(int artistId, Artist artist);
 
-    Art updateArt(int artId, Art art);
+    void deleteArtist(int artistId);
 
-    void deleteArt(int artId);
+    List<Art> getArtistArts(int artistId);
 
-    Artist getArtArtist(int artId);
+    List<Gallery> getArtistGalleries(int artistId);
 }
