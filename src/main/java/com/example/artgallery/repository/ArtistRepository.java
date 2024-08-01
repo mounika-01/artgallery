@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface ArtistRepository {
-    ArrayList<Artist getArtists();
+    ArrayList<Artist> getArtists();
 
     Artist getArtistById(int artistId);
 
