@@ -68,23 +68,23 @@ public class ArtistJpaService implements ArtistRepository {
         try {
             Artist newArtist = artistJpaRepository.findById(artistId).get();
             if (artist.getArtistName() != null) {
-                newArtist.setArtistName(artist.getArtistName())
+                newArtist.setArtistName(artist.getArtistName());
             }
-            
+
             if (artist.getGenre() != null) {
                 newArtist.setGenre(artist.getGenre());
             }
-            
+
             if (artist.getGalleries() != null) {
                 List<Integer> galleryIds = new ArrayList<>();
-                
-                for (Gallery gallery: artist.getGalleries()) {
+
+                for (Gallery gallery : artist.getGalleries()) {
                     galleryIds.add(gallery.getGalleryId());
                 }
-                
+
                 List<Gallery> galleries = galleryJpaRepository.findAllById(galleryIds);
                 if (galleries.size() != galleryIds.size()) {
-                    
+
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
                 }
                 newArtist.setGalleries(galleries);
