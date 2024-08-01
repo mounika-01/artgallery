@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface GalleryRepository {
-    ArrayList<Gallery getGalleries();
+    ArrayList<Gallery> getGalleries();
 
     Gallery getGalleryById(int galleryId);
 
@@ -19,5 +19,5 @@ public interface GalleryRepository {
 
     void deleteGallery(int galleryId);
 
-    List<Artist >getGalleryAtists>(int galleryd);
+    List<Artist> getGalleryArtists(int galleryId);
 }
