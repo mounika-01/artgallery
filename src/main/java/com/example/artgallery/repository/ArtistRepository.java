@@ -1,10 +1,11 @@
-import com.example.artgallery.model.Artist;
+package com.example.artgallery.repository;
 
+import com.example.artgallery.model.Art;
+import com.example.artgallery.model.Artist;
 import com.example.artgallery.model.Gallery;
 
 import java.util.ArrayList;
-
-import java.util.List;
+import java.util.*;
 
 public interface ArtistRepository {
     ArrayList<Artist> getArtists();
