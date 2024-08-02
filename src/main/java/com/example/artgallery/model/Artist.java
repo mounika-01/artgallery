@@ -32,7 +32,7 @@ public class Artist {
     private String genre;
 
     @ManyToMany
-    @JoinColumn(name = "artist_gallery", joinColumns = @JoinColumn(name = "artistid"), inverseJoinColumns = @JoinColumn(name = "galleryid"))
+    @JoinTable(name = "artist_gallery", joinColumns = @JoinColumn(name = "artistid"), inverseJoinColumns = @JoinColumn(name = "galleryid"))
     @JsonIgnoreProperties("artists")
     private List<Gallery> galleries;
 
