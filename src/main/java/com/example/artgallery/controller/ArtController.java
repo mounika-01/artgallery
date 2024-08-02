@@ -1,45 +1,73 @@
-package com.example.artgallery.controller;
+/*
+ * You can use the following import statements
+ *
+ * import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+ * 
+ * import javax.persistence.*;
+ * import java.util.List;
+ * 
+ */
 
-import com.example.artgallery.model.Art;
-import com.example.artgallery.model.Artist;
-import com.example.artgallery.service.ArtJpaService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation;
+// Write your code here
 
-import java.util.ArrayList;
+package com.example.artgallery.model;
 
-@RestController
-public class ArtController {
-    @Autowired
-    private ArtJpaService artJpaService;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-    @GetMapping("/galleries/artists/arts")
-    public ArrayList<Art> getArts() {
-        return artJpaService.getArts();
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
+@Table(name = "gallery")
+public class Gallery {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int galleryId;
+
+    @Column(name = "name")
+    private String galleryName;
+
+    @Column(name = "location")
+    private String location;
+
+    @ManyToMany(mappedBy = "galleries")
+    @JsonIgnoreProperties("galleries")
+    private List<Artist> artists;
+
+    public Gallery() {
+
     }
 
-    @GetMapping("/galleries/artists/arts/{artId}")
-    public Art getArtById(@PathVariable("artId") int artId) {
-        return artJpaService.getArtById(artId);
+    public int getGalleryId() {
+        return galleryId;
     }
 
-    @PostMapping("/galleries/artists/arts")
-    public Art addArt(@RequestBody Art art) {
-        return artJpaService.addArt(art);
+    public void setGalleryId(int galleryId) {
+        this.galleryId = galleryId;
     }
 
-    @PutMapping("/galleries/artists/arts/{artId}")
-    public Art updateArt(@PathVariable("artId") int artId, @RequestBody Art art) {
-        return artJpaService.updateArt(artId, art);
+    public String getGalleryName() {
+        return galleryName;
     }
 
-    @DeleteMapping("/galleries/artists/arts/{artId}")
-    public void deleteArt(@PathVariable("artId") int artId) {
-        artJpaService.deleteArt(artId);
+    public void setGalleryName(String galleryName) {
+        this.galleryName = galleryName;
     }
 
-    @GetMapping("/arts/{artId}/artist")
-    public Artist getArtArtist(@PathVariable("artId") int artId) {
-        return artJpaService.getArtArtist(artId);
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public List<Artist> getArtists() {
+        return artists;
+    }
+
+    public void setArtists(List<Artist> artists) {
+        this.artists = artists;
     }
 }
