@@ -5,7 +5,7 @@ import com.example.artgallery.model.Artist;
 import com.example.artgallery.model.Gallery;
 import com.example.artgallery.service.ArtistJpaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.ArrayList;
