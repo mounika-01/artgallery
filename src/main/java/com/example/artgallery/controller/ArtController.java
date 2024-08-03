@@ -1,73 +1,107 @@
-/*
- * You can use the following import statements
- *
- * import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
- * 
- * import javax.persistence.*;
- * import java.util.List;
- * 
- */
+package com.example.artgallery.service;
+import com.example.artgallery.model.Artist;
+import com.example.artgallery.model.Gallery;
+import com.example.artgallery.repository.ArtistJpaRepository;
+import com.example.artgallery.repository.GalleryJpaRepository;
+import com.example.artgallery.repository.GalleryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-// Write your code here
 
-package com.example.artgallery.model;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "gallery")
-public class Gallery {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int galleryId;
 
-    @Column(name = "name")
-    private String galleryName;
+@Service
+public class GalleryJpaService implements GalleryRepository {
+    @Autowired
+    private ArtistJpaRepository artistJpaRepository;
 
-    @Column(name = "location")
-    private String location;
+    @Autowired
+    private GalleryJpaRepository galleryJpaRepository;
 
-    @ManyToMany(mappedBy = "galleries")
-    @JsonIgnoreProperties("galleries")
-    private List<Artist> artists;
-
-    public Gallery() {
-
+    public ArrayList<Gallery> getGalleries() {
+        List<Gallery> galleryList = galleryJpaRepository.findAll();
+        ArrayList<Gallery> galleries = new ArrayList<>(galleryList);
+        return galleries;
     }
 
-    public int getGalleryId() {
-        return galleryId;
+    public Gallery getGalleryById(int galleryId) {
+        try {
+            Gallery gallery = galleryJpaRepository.findById(galleryId).get();
+            return gallery;
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 
-    public void setGalleryId(int galleryId) {
-        this.galleryId = galleryId;
+    public Gallery addGallery(Gallery gallery) {
+        List<Integer> artistIds = new ArrayList<>();
+        for (Artist artist : gallery.getArtists()) {
+            artistIds.add(artist.getArtistId());
+        }
+        Gallery savedGallery = galleryJpaRepository.save(gallery);
+        artistJpaRepository.saveAll(gallery.getArtists());
+        return savedGallery;
     }
 
-    public String getGalleryName() {
-        return galleryName;
+    public Gallery updateGallery(int galleryId, Gallery gallery) {
+        try {
+            Gallery newGallery = galleryJpaRepository.findById(galleryId).get();
+            if (gallery.getGalleryName() != null) {
+                newGallery.setGalleryName(gallery.getGalleryName());
+            }
+            if (gallery.getLocation() != null) {
+                newGallery.setLocation(gallery.getLocation());
+            }
+            if (gallery.getArtists() != null) {
+                List<Artist> artists = newGallery.getArtists();
+                for (Artist artist : artists) {
+                    artist.getGalleries().remove(newGallery);
+                }
+                artistJpaRepository.saveAll(artists);
+                List<Integer> newArtistIds = new ArrayList<>();
+                for (Artist artist : gallery.getArtists()) {
+                    newArtistIds.add(artist.getArtistId());
+                }
+                List<Artist> newArtists = artistJpaRepository.findAllById(newArtistIds);
+                for (Artist artist : newArtists) {
+                    artist.getGalleries().add(newGallery);
+                }
+                artistJpaRepository.saveAll(newArtists);
+                newGallery.setArtists(newArtists);
+            }
+            return galleryJpaRepository.save(newGallery);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 
-    public void setGalleryName(String galleryName) {
-        this.galleryName = galleryName;
+    public void deleteGallery(int galleryId) {
+        try {
+            Gallery gallery = galleryJpaRepository.findById(galleryId).get();
+            List<Artist> artists = gallery.getArtists();
+            for (Artist artist : artists) {
+                artist.getGalleries().remove(gallery);
+            }
+            artistJpaRepository.saveAll(artists);
+            galleryJpaRepository.deleteById(galleryId);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        throw new ResponseStatusException(HttpStatus.NO_CONTENT);
     }
 
-    public String getLocation() {
-        return location;
+    public List<Artist> getGalleryArtists(int galleryId) {
+        try {
+            Gallery gallery = galleryJpaRepository.findById(galleryId).get();
+            return gallery.getArtists();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public List<Artist> getArtists() {
-        return artists;
-    }
-
-    public void setArtists(List<Artist> artists) {
-        this.artists = artists;
-    }
+    // Add this closing brace
 }
