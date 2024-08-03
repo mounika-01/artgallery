@@ -1,3 +1,4 @@
+package com.example.artgallery.service;
 import com.example.artgallery.model.Artist;
 import com.example.artgallery.model.Gallery;
 import com.example.artgallery.repository.ArtistJpaRepository;
@@ -8,8 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Service
 public class GalleryJpaService implements GalleryRepository {
